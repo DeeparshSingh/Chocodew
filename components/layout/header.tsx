@@ -96,17 +96,6 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => handleNavigation("/account")}
-            className="transition-all duration-300 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md"
-          >
-            My Account
-          </Button>
-        </div>
-
         <Button
           variant="ghost"
           size="icon"
@@ -155,19 +144,6 @@ export function Header() {
                   </Button>
                 </motion.div>
               ))}
-              <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-              >
-                <Button
-                  variant="outline"
-                  className="justify-start px-4 py-3 rounded-md text-sm font-medium w-full hover:bg-primary hover:text-white transition-all duration-300"
-                  onClick={() => handleNavigation("/account")}
-                >
-                  My Account
-                </Button>
-              </motion.div>
             </div>
           </motion.div>
         )}
