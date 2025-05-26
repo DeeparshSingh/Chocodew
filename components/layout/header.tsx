@@ -23,7 +23,7 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -36,21 +36,38 @@ export function Header() {
   };
 
   return (
-    <header className={cn(
-      "fixed top-0 w-full z-50 transition-all duration-300",
-      isScrolled 
-        ? "bg-white/95 dark:bg-stone-900/95 backdrop-blur-sm shadow-sm py-3"
-        : "bg-transparent py-5"
-    )}>
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        <Button 
-          variant="ghost" 
-          className="flex items-center gap-2 px-0 hover:bg-transparent"
-          onClick={() => handleNavigation("/")}
+    <motion.header
+      className={cn(
+        "fixed top-0 w-full z-50 transition-all duration-300 ease-in-out",
+        isScrolled
+          ? "bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl shadow-lg py-2 after:absolute after:inset-0 after:border after:border-white/20 after:rounded-2xl after:-z-10"
+          : "bg-transparent py-5"
+      )}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+    >
+      <div className={cn(
+        "container mx-auto px-4 flex items-center justify-between",
+        isScrolled && "max-w-7xl mx-auto"
+      )}>
+        <motion.div
+          initial={{ scale: 1 }}
+          animate={{ scale: isScrolled ? 0.9 : 1 }}
+          transition={{ duration: 0.3 }}
         >
-          <Coffee size={32} className="text-primary" />
-          <span className="font-playfair font-bold text-2xl">Chocodew</span>
-        </Button>
+          <Button 
+            variant="ghost" 
+            className="flex items-center gap-2 px-0 hover:bg-transparent group"
+            onClick={() => handleNavigation("/")}
+          >
+            <Coffee 
+              size={32} 
+              className="text-primary transition-transform duration-300 group-hover:scale-110" 
+            />
+            <span className="font-playfair font-bold text-2xl">Chocodew</span>
+          </Button>
+        </motion.div>
 
         <nav className="hidden md:flex items-center space-x-1">
           {navItems.map((item) => (
@@ -58,10 +75,10 @@ export function Header() {
               key={item.name}
               variant="ghost"
               className={cn(
-                "px-4 py-2 rounded-md text-sm font-medium transition-colors relative",
+                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 relative hover:scale-105",
                 pathname === item.href
                   ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-primary"
               )}
               onClick={() => handleNavigation(item.href)}
             >
@@ -84,6 +101,7 @@ export function Header() {
             variant="outline" 
             size="sm"
             onClick={() => handleNavigation("/account")}
+            className="transition-all duration-300 hover:bg-primary hover:text-white hover:scale-105 hover:shadow-md"
           >
             My Account
           </Button>
@@ -92,11 +110,17 @@ export function Header() {
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden"
+          className="md:hidden hover:bg-primary/10"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
         >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          <motion.div
+            initial={false}
+            animate={{ rotate: mobileMenuOpen ? 90 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </motion.div>
         </Button>
       </div>
 
@@ -106,36 +130,48 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-background border-b"
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border-t border-white/20"
           >
             <div className="container mx-auto px-4 py-4 flex flex-col space-y-3">
               {navItems.map((item) => (
-                <Button
+                <motion.div
                   key={item.name}
-                  variant="ghost"
-                  className={cn(
-                    "justify-start px-4 py-3 rounded-md text-sm font-medium w-full",
-                    pathname === item.href
-                      ? "bg-primary/10 text-primary"
-                      : "text-foreground hover:bg-accent/50"
-                  )}
-                  onClick={() => handleNavigation(item.href)}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  {item.name}
-                </Button>
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "justify-start px-4 py-3 rounded-md text-sm font-medium w-full transition-all duration-300",
+                      pathname === item.href
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground hover:bg-primary/5 hover:text-primary"
+                    )}
+                    onClick={() => handleNavigation(item.href)}
+                  >
+                    {item.name}
+                  </Button>
+                </motion.div>
               ))}
-              <Button
-                variant="ghost"
-                className="justify-start px-4 py-3 rounded-md text-sm font-medium text-foreground hover:bg-accent/50 w-full"
-                onClick={() => handleNavigation("/account")}
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
               >
-                My Account
-              </Button>
+                <Button
+                  variant="outline"
+                  className="justify-start px-4 py-3 rounded-md text-sm font-medium w-full hover:bg-primary hover:text-white transition-all duration-300"
+                  onClick={() => handleNavigation("/account")}
+                >
+                  My Account
+                </Button>
+              </motion.div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }
